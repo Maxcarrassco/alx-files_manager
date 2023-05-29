@@ -11,7 +11,15 @@ class RedisClient {
   }
 
   isAlive() {
-    return this.client.emit('ready') ? this.client.emit('ready') : false;
+    return this.client.ping((err, reply) => {
+      if (err) {
+        return false;
+      }
+      if (reply === 'PONG') {
+        return true;
+      }
+      return false;
+    });
   }
 
   async get(key) {
