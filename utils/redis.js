@@ -7,19 +7,14 @@ class RedisClient {
   constructor() {
     this.client = createClient();
     this.client.on('error', (err) => console.log(err));
-    this.client.on('ready', () => true);
+    this.connected = false;
+    this.client.on('connect', () => {
+      this.connected = true;
+    });
   }
 
   isAlive() {
-    return this.client.ping((err, reply) => {
-      if (err) {
-        return false;
-      }
-      if (reply === 'PONG') {
-        return true;
-      }
-      return false;
-    });
+    return this.connected;
   }
 
   async get(key) {
