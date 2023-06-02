@@ -66,6 +66,28 @@ class DBClient {
     }
     return false;
   }
+
+  async uploadFile(userId, name, type, isPublic, parentId, localPath = null) {
+    await this.client.connect();
+    const obj = {
+      userId, name, type, isPublic, parentId,
+    };
+    if (localPath) {
+      obj.localPath = localPath;
+    }
+    const file = this.client.db(this.database).collection('files').insertOne(obj);
+    return file;
+  }
+
+  async getFileById(id) {
+    const _id = new mongo.ObjectID(id);
+    await this.client.connect();
+    const file = await this.client.db(this.database).collection('files').find({ _id }).toArray();
+    if (!file.length) {
+      return null;
+    }
+    return file[0];
+  }
 }
 
 const dbClient = new DBClient();
