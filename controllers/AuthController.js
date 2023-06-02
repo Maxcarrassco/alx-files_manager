@@ -39,7 +39,7 @@ class AuthController {
       return;
     }
     const accessToken = v4();
-    await redisClient.set(`auth_${accessToken}`, user._id.toString('utf8'), 60 * 60 * 24);
+    await redisClient.set(`auth_${accessToken}`, user._id.toString(), 60 * 60 * 24);
     res.json({ token: accessToken });
     res.end();
   }
